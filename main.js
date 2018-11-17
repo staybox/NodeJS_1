@@ -12,7 +12,7 @@ function listDirAndMoveFiles(dir, dest) {
 
     fs.readdir(dir, (err, files) => {
         if (err) {
-            console.log("Ошибка чтения каталога");
+            return console.log("Ошибка чтения каталога");
         }
 
         // Создание новой корневой папки и проверка
