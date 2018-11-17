@@ -1,10 +1,6 @@
 var fs = require("fs");
 var path = require("path");
 
-function check(arg1, arg2) {
-    return !(isNaN(arg1) || isNaN(arg2));
-}
-
 function listDirAndMoveFiles(dir, dest) {
     if (!dir || !dest) {
         return console.log("need two args");
