@@ -1,37 +1,62 @@
 var fs = require("fs");
 var path = require("path");
+var observer = require("./lib/Observer.js");
+var program = require('commander');
 
-function listDirAndMoveFiles(dir, dest) {
-    if (!dir || !dest) {
+// var obs = new observer();
+// obs.start();
+// return;
+
+/**
+ * Commander
+ */
+program
+  .version('1.0.0')
+  .option('-p, --peppers', 'Add peppers')
+  .option('-P, --pineapple', 'Add pineapple')
+  .option('-b, --bbq-sauce', 'Add bbq sauce')
+  .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
+  .option('-u, --drugs', 'Add drugs')
+  .option('-d, --dir [myVar]', 'Add dir')
+  .option('-e, --dest [myVar]', 'Add dest')
+  .parse(process.argv); 
+  
+    
+var where = program.dir;
+var these = program.dest;
+
+
+function listDirAndMoveFiles(where, these) {
+    console.log(where, these);
+    return;
+    if (!where || !these) {
         return console.log("need two args");
     }
 
-    if (!(isNaN(dir) || isNaN(dest))) {
+    if (!(isNaN(where) || isNaN(these))) {
         return console.log("Вы ввели числа вместо указания строчных аргументов");
     }
 
-    fs.readdir(dir, (err, files) => {
+    fs.readdir(where, (err, files) => {
         if (err) {
             return console.log("Ошибка чтения каталога");
         }
 
         // Создание новой корневой папки и проверка
-        if (!fs.existsSync(dest)) {
-            return fs.mkdirSync(dest);
+        if (!fs.existsSync(these)) {
+            return fs.mkdirSync(these);
         }
 
         files.forEach(function (file) {
-            file = path.resolve(dir, file);
-
+            file = path.resolve(where, file);
 
             fs.stat(file, function (err, stat) {
                 if (stat.isDirectory()) {
-                    listDirAndMoveFiles(file, dest);
-
+                    listDirAndMoveFiles(file, these, delFolder);
                 } else if (!stat.isDirectory()) {
-
-                    var name = dest + "\\" + path.basename(file)[0] + "\\" + path.basename(file);
-                    var folder = dest + "\\" + path.basename(file)[0];
+                    var name =
+                        these + "\\" + path.basename(file)[0] + "\\" + path.basename(file);
+                    var folder = these + "\\" + path.basename(file)[0];
                     // Создание новой корневой папки и проверка
                     if (!fs.existsSync(folder)) {
                         fs.mkdirSync(folder);
@@ -39,11 +64,18 @@ function listDirAndMoveFiles(dir, dest) {
 
                     fs.renameSync(file, name);
                 }
+
             });
         });
+        // console.log(delFolder);
+        // if (delFolder === "y") {
+        //     return fs.rmdir(where, function (del) {
+        //         console.log(del);
+        //     });
+        // }
     });
     return 0;
 }
 
-listDirAndMoveFiles(process.argv[2], process.argv[3]);
 
+listDirAndMoveFiles(where, these);
