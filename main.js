@@ -12,11 +12,6 @@ var program = require('commander');
  */
 program
   .version('1.0.0')
-  .option('-p, --peppers', 'Add peppers')
-  .option('-P, --pineapple', 'Add pineapple')
-  .option('-b, --bbq-sauce', 'Add bbq sauce')
-  .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
-  .option('-u, --drugs', 'Add drugs')
   .option('-d, --dir [myVar]', 'Add dir')
   .option('-e, --dest [myVar]', 'Add dest')
   .parse(process.argv); 
