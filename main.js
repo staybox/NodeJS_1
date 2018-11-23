@@ -22,8 +22,6 @@ var these = program.dest;
 
 
 function listDirAndMoveFiles(where, these) {
-    console.log(where, these);
-    return;
     if (!where || !these) {
         return console.log("need two args");
     }
@@ -47,7 +45,7 @@ function listDirAndMoveFiles(where, these) {
 
             fs.stat(file, function (err, stat) {
                 if (stat.isDirectory()) {
-                    listDirAndMoveFiles(file, these, delFolder);
+                    listDirAndMoveFiles(file, these);
                 } else if (!stat.isDirectory()) {
                     var name =
                         these + "\\" + path.basename(file)[0] + "\\" + path.basename(file);
