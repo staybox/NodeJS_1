@@ -1,11 +1,10 @@
+#!/usr/bin/env node
 var fs = require("fs");
 var path = require("path");
 var observer = require("./lib/Observer.js");
 var program = require('commander');
+var del = require('del');
 
-// var obs = new observer();
-// obs.start();
-// return;
 
 /**
  * Commander
@@ -20,8 +19,17 @@ program
 var where = program.dir;
 var these = program.dest;
 
+var obs = new observer(() => {
+    console.log('************ read ***********');
+    del.sync(where);
+    //del.sync(`${path.join(where, path.sep)}**`);
+    console.log('delete source directory');
+    
+});
+
 
 function listDirAndMoveFiles(where, these) {
+    
     if (!where || !these) {
         return console.log("need two args");
     }
@@ -30,6 +38,7 @@ function listDirAndMoveFiles(where, these) {
         return console.log("Вы ввели числа вместо указания строчных аргументов");
     }
 
+    
     fs.readdir(where, (err, files) => {
         if (err) {
             return console.log("Ошибка чтения каталога");
@@ -42,33 +51,35 @@ function listDirAndMoveFiles(where, these) {
 
         files.forEach(function (file) {
             file = path.resolve(where, file);
-
+            
             fs.stat(file, function (err, stat) {
+                console.log(file);
                 if (stat.isDirectory()) {
+                
                     listDirAndMoveFiles(file, these);
-                } else if (!stat.isDirectory()) {
-                    var name =
-                        these + "\\" + path.basename(file)[0] + "\\" + path.basename(file);
+                } 
+                if (!stat.isDirectory()) {
+                    obs.addObserver(file);
+                    var name = these + "\\" + path.basename(file)[0] + "\\" + path.basename(file);
                     var folder = these + "\\" + path.basename(file)[0];
                     // Создание новой корневой папки и проверка
                     if (!fs.existsSync(folder)) {
                         fs.mkdirSync(folder);
                     }
 
-                    fs.renameSync(file, name);
+                    fs.rename(file, name, (err) => {
+                        if (err) throw err;
+                        console.log('Rename complete!');
+                        obs.removeObserver(file);
+                      });
                 }
 
             });
+            
         });
-        // console.log(delFolder);
-        // if (delFolder === "y") {
-        //     return fs.rmdir(where, function (del) {
-        //         console.log(del);
-        //     });
-        // }
     });
-    return 0;
+    
 }
 
-
 listDirAndMoveFiles(where, these);
+obs.start('sorting...');
