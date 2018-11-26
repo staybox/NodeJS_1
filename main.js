@@ -39,11 +39,11 @@ var obs = new observer(() => {
 
  
 if (!where || !these) {
-    return console.log("need two args");
+    process.exit("need two args");
  }
 
 if (!(isNaN(where) || isNaN(these))) {
-    return console.log("Вы ввели числа вместо указания строчных аргументов");
+    process.exit("Вы ввели числа вместо указания строчных аргументов");
 }
 
 if (!fs.existsSync(these)) {
