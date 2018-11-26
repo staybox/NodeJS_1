@@ -11,8 +11,8 @@ var del = require('del');
  */
 program
   .version('1.0.0')
-  .option('-d, --dir [myVar]', 'Add dir')
-  .option('-e, --dest [myVar]', 'Add dest')
+  .option('-d, --dir [myVar]', 'Add source directory')
+  .option('-e, --dest [myVar]', 'Add destination directory')
   .option('-x, --removeSource', 'Delete source directory with subfolders')
   .parse(process.argv); 
   
