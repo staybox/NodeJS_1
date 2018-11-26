@@ -13,15 +13,22 @@ program
   .version('1.0.0')
   .option('-d, --dir [myVar]', 'Add dir')
   .option('-e, --dest [myVar]', 'Add dest')
+  .option('-x, --removeSource', 'Delete source directory with subfolders')
   .parse(process.argv); 
   
     
 var where = program.dir;
 var these = program.dest;
+var delSource = program.removeSource;
+
+
 
 var obs = new observer(() => {
     console.log('************ read ***********');
-    del.sync(where);
+    if(delSource === true){
+        del.sync(where);
+    }
+    
     //del.sync(`${path.join(where, path.sep)}**`);
     console.log('delete source directory');
     
